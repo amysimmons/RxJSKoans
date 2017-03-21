@@ -6,17 +6,17 @@ module('Lesson 2 - Composable Observations');
  * Step 3: run it again
  * Note: Do not change anything other than the blank
  */
- 
+
 test('ComposableAddition', function() {
     var received = 0;
-    var numbers = [10, 100, _______];
+    var numbers = [10, 100, 1000];
     numbers
         .toObservable()
         .sum()
         .subscribe(function(x) { received = x; });
     equals(received, 1110);
 });
-  
+
  test('ComposeableBeforeAndAfter', function() {
     var names = Range.create(1, 6),
         a = '',
@@ -27,42 +27,42 @@ test('ComposableAddition', function() {
         .where(function(n) { return n % 2 === 0; })
         .doAction(function(n) { b += n.toString(); })
         .subscribe();
-    equals(a, _______);
+    equals(a, '123456');
     equals(b, '246');
 });
- 
+
 test('WeWroteThis', function() {
     var received = [];
     var names = ['Bart', 'Wes', 'Erik', 'Matthew', 'Brian'];
     names
         .toObservable()
-        .where(function(n) { return n.length <= _______; })
+        .where(function(n) { return n.length <= 4; })
         .subscribe(function(x) { received.push(x); });
-    equals(received.toString(), 'Bart,Wes,Erik');    
+    equals(received.toString(), 'Bart,Wes,Erik');
 });
- 
+
 test('ConvertingEvents', function() {
     var received = '';
     var names = ['wE', 'hOpE', 'yOU', 'aRe', 'eNJoyIng', 'tHiS' ];
     names
         .toObservable()
-        .select(function(x) { return x._______; })
+        .select(function(x) { return x.toLowerCase(); })
         .subscribe(function(x) { received += x + ' '; });
     equals(received, 'we hope you are enjoying this ');
 });
- 
+
 test('CreatingAMoreRelevantEventStream', function() {
     var received = '',
         mouseXMovements = [100, 200, 150],
         windowTopX = 50,
         relativemouse = mouseXMovements
             .toObservable()
-            .select(function(x) { return x - _______; });
-    
+            .select(function(x) { return x - windowTopX; });
+
     relativemouse.subscribe(function(x) { received += x + ', '; });
     equals(received, '50, 150, 100, ');
 });
- 
+
 test('CheckingEverything', function() {
     var received = null;
     var numbers = [ 2, 4, 6, 8 ];
@@ -70,13 +70,40 @@ test('CheckingEverything', function() {
         .toObservable()
         .all(function(x) { return x % 2 === 0; })
         .subscribe(function(x) { received = x; });
-    equals(received, _______);
+    equals(received, true);
 });
- 
+
 test('CompositionMeansTheSumIsGreaterThanTheParts', function() {
     var numbers = Rx.Observable.range(1, 10);
     numbers
-        .where(function(x) { return x > _______; })
+        .where(function(x) { return x > 8; })
         .sum()
         .subscribe(function(x) { equals(19, x); });
  });
+
+//Writing some of my own tests
+
+test('Counting dogs and cats', function() {
+    var dogsAndCats = ['dog', 'cat', 'dog'],
+        dogs = 0,
+        cats = 0
+
+    //can or should i do this in the one observable?
+    //when i first tried, the array was mutating and
+    //cats was 0 instead of 1
+
+    dogsAndCats
+        .toObservable()
+        .where(function(x) { return x === 'dog'; })
+        .doAction(function(x) { dogs += 1; })
+        .subscribe()
+
+    dogsAndCats
+        .toObservable()
+        .where(function(x) {return x === 'cat'; })
+        .doAction(function(x) { cats ++; })
+        .subscribe()
+
+    equals(dogs, 2);
+    equals(cats, 1);
+});
