@@ -9,7 +9,11 @@ module('Lesson 3 - Time');
 
 asyncTest('LaunchingAnActionInTheFuture', function() {
     var received = '';
-    var delay = _______;
+
+    //this delay can be more than the setTimeout of 500ms
+    //because the setTimeout will wait for *at least* 500ms, or as
+    //long as the code takes to execute, before it runs
+    var delay = 1000;
     Rx
         .Scheduler
         .immediate
@@ -20,21 +24,28 @@ asyncTest('LaunchingAnActionInTheFuture', function() {
 
 asyncTest('LaunchingAnEventInTheFuture', function() {
     var received = '',
-        time = _______;
-        
+
+        //this time must be less than the setTimeout of 500ms
+        //because as soon as subscribe is called, and 500ms has
+        //passed, setTimeout will execute
+        time = 400;
+
     Rx
         .Observable
         .returnValue('Godot', Rx.Scheduler.Immediate)
         .delay(time)
         .subscribe(function(x) { received = x; });
-    
+
     setTimeout(function() { equals(received, 'Godot'); start(); }, 500);
 });
 
 asyncTest('AWatchedPot', function() {
     var received = '',
         delay = 500,
-        timeout = _______,
+
+        //this timeout must be greater than the setTimeout's 500ms
+        //delay or the string will be Tepid, not Boiling
+        timeout = 600,
         timeoutEvent =
             Rx  .Observable
                 .returnValue('Tepid');
@@ -44,7 +55,7 @@ asyncTest('AWatchedPot', function() {
         .delay(delay)
         .timeout(timeout, timeoutEvent)
         .subscribe(function(x) { received = x; });
-    
+
     setTimeout(function() { equals(received, 'Boiling'); start(); }, 500);
 });
- 
+

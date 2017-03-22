@@ -88,10 +88,6 @@ test('Counting dogs and cats', function() {
         dogs = 0,
         cats = 0
 
-    //can or should i do this in the one observable?
-    //when i first tried, the array was mutating and
-    //cats was 0 instead of 1
-
     dogsAndCats
         .toObservable()
         .where(function(x) { return x === 'dog'; })
